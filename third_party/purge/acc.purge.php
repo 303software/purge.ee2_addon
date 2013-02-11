@@ -54,10 +54,17 @@ class Purge_acc
 		{
 			$EE =& get_instance();
 			$EE->load->helper('varnish');
-			$site_url = $EE->config->item('varnish_site_url');
+			$sites = $EE->config->item('varnish_site_url');
   		$port = $EE->config->item('varnish_port');
-  		
-			send_purge_request($site_url, $port);
+  		//@internal - original code did not take into account the possibility of multiple site urls
+			if (!is_array($sites)) {
+				$sites = array($sites);
+			}
+			
+			foreach ($sites as $site_url) {
+				send_purge_request($site_url, $port);
+			}
+			//end edit of original code
 		}
 	}
 }
